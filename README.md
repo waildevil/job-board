@@ -106,11 +106,6 @@ docker compose up --build
 
 ---
 
-### 📸 Screenshots
-
-*(Add screenshots of homepage, recruiter dashboard, job detail, etc.)*
-
----
 
 ### 👨‍💻 Author
 

@@ -1,0 +1,37 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+**/target/
+
+
+
+src/main/resources/application.properties
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+logs/
+**/*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.env
+docker-compose.override.yml
+docker-data/
+.env
+.env.*
+
+# Local Docker volumes (optional if you map to local folders)
+**/mysql_data/
+**/volumes/

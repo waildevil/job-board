@@ -42,49 +42,50 @@ Employers can post and manage jobs, candidates can browse and apply, and admins 
 ```bash
 git clone https://github.com/waildevil/job-board.git
 cd job-board
-
+```
 
 ### 2️⃣ Backend Setup (Spring Boot API)
 
 **Configure your environment variables or `application-local.properties`:**
-
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/jobboard_db
 spring.datasource.username=youruser
 spring.datasource.password=yourpassword
 
 jwt.secret=your-jwt-secret
+```
 
-** Run with Maven or your IDE:**
-
+**Run with Maven or your IDE:**
 ```bash
 cd job-board-api
 ./mvnw spring-boot:run
+```
 
-API docs will be available at:
+API docs will be available at:  
 👉 http://localhost:8080/swagger-ui.html
 
+---
 
-### Frontend Setup (React + Vite)
+### 3️⃣ Frontend Setup (React + Vite)
+
 **Install dependencies:**
-
 ```bash
-cd job-board-frontend
+cd ../job-board-frontend
 npm install
+```
 
-**Create .env with your API + Google Maps key:**
-
+**Create `.env` with your API + Google Maps key:**
 ```bash
 VITE_API_URL=http://localhost:8080
 VITE_GOOGLE_MAPS_KEY=your_google_maps_api_key
+```
 
-**Run the server:**
-
+**Run the dev server:**
 ```bash
-npm start
+npm run dev
+```
 
 Visit 👉 http://localhost:3000
-
 
 
 

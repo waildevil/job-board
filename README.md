@@ -80,9 +80,9 @@ VITE_API_URL=http://localhost:8080
 VITE_GOOGLE_MAPS_KEY=your_google_maps_api_key
 ```
 
-**Run the dev server:**
+**Run the server:**
 ```bash
-npm run dev
+npm start
 ```
 
 Visit 👉 http://localhost:3000

@@ -88,48 +88,36 @@ npm run dev
 Visit 👉 http://localhost:3000
 
 
+### 🐳 Run with Docker (Full Stack)
+
+At the root, use `docker-compose.yml` to run MySQL + API + Frontend together:
+
+```bash
+docker compose up --build
+```
+
+---
+
+### 🌍 Deployment
+
+- **Backend:** Deploy Spring Boot API (e.g., Render, Railway, AWS, or VPS) with MySQL  
+- **Frontend:** Build React app (`npm run build`) and host on Vercel/Netlify/your server  
+- **Update environment variables:** `VITE_API_URL`, DB credentials, OAuth keys  
+
+---
+
+### 📸 Screenshots
+
+*(Add screenshots of homepage, recruiter dashboard, job detail, etc.)*
+
+---
+
+### 👨‍💻 Author
+
+**Mohamed Wail Homan** ([@waildevil](https://github.com/waildevil))
 
 
+### 📜 License
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+MIT License
 

@@ -1,11 +1,13 @@
-# Use a lightweight Java 21 base image
-FROM eclipse-temurin:21-jdk-alpine
-
-# Set working directory inside container
+# ===== Build stage =====
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn -q -DskipTests package
 
-# Copy the built JAR into the container
-COPY target/job-board-api-0.0.1-SNAPSHOT.jar app.jar
-
-# Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# ===== Runtime stage =====
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+# Railway provides $PORT; bind Spring to it
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=$PORT -jar app.jar"]

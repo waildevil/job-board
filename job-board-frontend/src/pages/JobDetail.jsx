@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { API_URL } from '../services/config';
-import { getJobById } from '../../services/api';
+import { getJobById } from '../services/api';
 
 function JobDetail() {
   const { id } = useParams();

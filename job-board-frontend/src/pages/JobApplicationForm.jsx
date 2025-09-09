@@ -8,7 +8,7 @@ import ApplicationStep3 from './ApplicationStep3';
 import ApplicationSummary from './ApplicationSummary';
 import ApplicationStep4 from './ApplicationStep4';
 import { API_URL } from '../services/config';
-import { submitApplication, getJobById } from '../../services/api';
+import { submitApplication, getJobById } from '../services/api';
 
 
 function JobApplicationForm() {

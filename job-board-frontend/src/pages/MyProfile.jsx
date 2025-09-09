@@ -2,6 +2,31 @@ import React, { useEffect, useMemo, useState } from 'react';
 import AddressInput from './AddressInput';
 import { API_URL } from '../services/config';
 import { fetchMe } from '../services/api';
+import { updateMyPassword } from '../services/api';
+
+const changePassword = async () => {
+  if (!canSave) return;
+  setSaving(true);
+  setMsg(null);
+  setErr(null);
+  try {
+    await updateMyPassword(oldPassword, nw);
+    setMsg('Password changed successfully');
+    notify?.('Password changed');
+    setOld('');
+    setNew('');
+    setConfirm('');
+    setTimeout(() => setMsg(null), 2500);
+  } catch (e) {
+    const msg = e?.response?.data?.message || e?.response?.data?.error || e.message || 'Failed to change password';
+    setErr(msg);
+    setTimeout(() => setErr(null), 3500);
+  } finally {
+    setSaving(false);
+  }
+};
+
+
 
 
 export default function MyProfile() {
@@ -199,36 +224,26 @@ function PasswordBlock({ token, notify }) {
   const canSave = oldPassword && nw && confirm && nw === confirm && nw.length >= 8;
 
   const changePassword = async () => {
-    if (!canSave) return;
-    setSaving(true);
-    setMsg(null);
-    setErr(null);
-    try {
-      const res = await fetch(`/users/me/password`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ oldPassword, newPassword: nw }),
-      });
-
-      const payload = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(payload?.error || payload?.message || 'Failed to change password');
-
-      setMsg('Password changed successfully');
-      notify?.('Password changed');
-      setOld('');
-      setNew('');
-      setConfirm('');
-      setTimeout(() => setMsg(null), 2500);
-    } catch (e) {
-      setErr(e.message || 'Failed to change password');
-      setTimeout(() => setErr(null), 3500);
-    } finally {
-      setSaving(false);
-    }
-  };
+  if (!canSave) return;
+  setSaving(true);
+  setMsg(null);
+  setErr(null);
+  try {
+    await updateMyPassword(oldPassword, nw);
+    setMsg('Password changed successfully');
+    notify?.('Password changed');
+    setOld('');
+    setNew('');
+    setConfirm('');
+    setTimeout(() => setMsg(null), 2500);
+  } catch (e) {
+    const msg = e?.response?.data?.message || e?.response?.data?.error || e.message || 'Failed to change password';
+    setErr(msg);
+    setTimeout(() => setErr(null), 3500);
+  } finally {
+    setSaving(false);
+  }
+};
 
   return (
     <div className="pt-4 border-t">

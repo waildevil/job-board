@@ -114,3 +114,7 @@ export const patchProfileResource = async (url, body) =>
 // Register
 export const registerUser = async (payload) =>
   (await axios.post('/auth/register', payload)).data;
+
+
+export const updateMyPassword = async (oldPassword, newPassword) =>
+  (await axios.patch('/users/me/set-password', { oldPassword, newPassword })).data;

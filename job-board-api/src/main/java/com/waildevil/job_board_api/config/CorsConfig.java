@@ -15,6 +15,8 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:3000",
+                                "http://localhost:5173",
+                                "http://127.0.0.1:5173",
                                 "https://jobboard-waildevil.vercel.app/"
                                 )
                         .allowedMethods("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS")

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../services/config';
+import { fetchMe } from '../services/api';
 
 function ApplicationStep1({ formData, onChange, job }) {
   const navigate = useNavigate();

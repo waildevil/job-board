@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import { API_URL } from '../services/config';
+import { getJobById } from '../../services/api';
 
 function JobDetail() {
   const { id } = useParams();
@@ -21,12 +22,12 @@ function JobDetail() {
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [hasApplied, setHasApplied] = useState(false);
   const [checkingApplication, setCheckingApplication] = useState(true);
+  
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await fetch(`/jobs/${id}`);
-        const data = await res.json();
+        const data = await getJobById(id);
         setJob(data);
       } catch (err) {
         console.error('Failed to fetch job details:', err);

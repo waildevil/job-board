@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AddressInput from './AddressInput';
 import { API_URL } from '../services/config';
+import { fetchMe } from '../services/api';
+
 
 export default function MyProfile() {
   const [me, setMe] = useState(null);
@@ -11,26 +13,23 @@ export default function MyProfile() {
   const token = useMemo(() => localStorage.getItem('token'), []);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch(`/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error('Failed to fetch user profile');
-        const data = await res.json();
-        setMe(data);
-        setTemp({
-          name: data.name || '',
-          phoneNumber: data.phoneNumber || '',
-          address: data.address || '',
-        });
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [token]);
+  (async () => {
+    try {
+      const data = await fetchMe();
+      setMe(data);
+      setTemp({
+        name: data.name || '',
+        phoneNumber: data.phoneNumber || '',
+        address: data.address || '',
+      });
+    } catch (e) {
+      console.error('Failed to fetch user profile', e);
+    } finally {
+      setLoading(false);
+    }
+  })();
+}, [token]);
+
 
   const notify = (t) => {
     setMsg(t);
@@ -55,21 +54,12 @@ export default function MyProfile() {
     }
 
     try {
-      const res = await fetch(`${url}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) throw await extractErr(res);
-      const updated = await res.json();
+      const updated = await patchProfileResource(url, body);
       setMe(updated);
       setEditing(null);
       notify('Saved');
     } catch (e) {
-      alert(e.message || 'Update failed');
+      alert(e?.response?.data?.message || e.message || 'Update failed');
     }
   };
 

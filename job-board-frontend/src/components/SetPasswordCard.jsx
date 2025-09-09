@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { API_URL } from '../services/config';
+import { setMyPassword } from '../services/api';
 
 export default function SetPasswordCard({ onDone, className = '' }) {
   const [p1, setP1] = useState('');
@@ -14,31 +15,20 @@ export default function SetPasswordCard({ onDone, className = '' }) {
   const canSave = p1 && p2 && p1 === p2 && p1.length >= 8;
 
   const submit = async () => {
-    if (!canSave || !token) return;
+    if (!canSave) return;
     setSaving(true); setMsg(null); setErr(null);
     try {
-      const res = await fetch(`/users/me/set-password`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ newPassword: p1 }),
-      });
-      const ct = res.headers.get('content-type') || '';
-      const payload = ct.includes('application/json')
-        ? await res.json().catch(() => ({}))
-        : await res.text().catch(() => '');
-
-      if (!res.ok) {
-        const serverMsg =
-          (typeof payload === 'string' ? payload : (payload?.error || payload?.message)) ||
-          res.statusText || 'Failed to set password';
-        throw new Error(serverMsg);
-      }
-
-      setMsg('Password set — you can now log in with email/password too.');
+      await setMyPassword(p1);
+      setMsg('Password set - you can now log in with email/password too.');
       setP1(''); setP2('');
       setTimeout(() => { setMsg(null); onDone?.(); }, 1400);
     } catch (e) {
-      setErr(e.message || 'Error setting password');
+      const serverMsg =
+        e?.response?.data?.message ||
+        e?.response?.data?.error ||
+        e?.message ||
+        'Error setting password';
+      setErr(serverMsg);
       setTimeout(() => setErr(null), 3000);
     } finally {
       setSaving(false);

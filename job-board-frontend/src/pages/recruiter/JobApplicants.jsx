@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../../services/axiosInstance';
-import { getApplicantsByJob, setApplicationStatus, getJobStats } from '../../services/api';
+import { getApplicantsByJob, setApplicationStatus, getJobStats, getApplicationFile  } from '../../services/api';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../services/config';
 
@@ -17,15 +17,7 @@ export default function JobApplicants() {
 
   const openApplicationFile = async (appId, type) => {
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await axios.get(
-        `/applications/${appId}/${type}`,
-        {
-          responseType: "blob",
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      const res = await getApplicationFile(appId, type);
 
  
       const mime = res.headers["content-type"] || "application/pdf";

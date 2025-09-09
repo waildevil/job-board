@@ -4,6 +4,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { isTokenExpired, getUserRole } from '../utils/auth';
 import { toast } from 'react-toastify';
 import { API_URL } from '../services/config';
+import { fetchMe } from '../services/api';
 
 
 
@@ -16,41 +17,34 @@ function Navbar() {
   const role = getUserRole();
 
   useEffect(() => {
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-  if (!token || isTokenExpired()) {
-    if (!sessionStorage.getItem('toastShown')) {
-      toast.info('Session expired. Please login again.');
-      sessionStorage.setItem('toastShown', 'true');
+    if (!token || isTokenExpired()) {
+      if (!sessionStorage.getItem('toastShown')) {
+        toast.info('Session expired. Please login again.');
+        sessionStorage.setItem('toastShown', 'true');
+      }
+      localStorage.clear();
+      setEmail(null);
+      setName('');
+      return;
     }
-    localStorage.clear();
-    setEmail(null);
-    setName('');
-    return;
-  }
 
- 
-  fetch(`/users/me`, {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to fetch user');
-      return res.json();
-    })
-    .then(data => {
-      setName(data.name || 'User');
-      setEmail(data.email || localStorage.getItem('email') || null); 
-    
-      if (data.email) localStorage.setItem('email', data.email);
-      if (data.name) localStorage.setItem('name', data.name);
-    })
-    .catch(err => {
-      console.error('User fetch error:', err);
-     
-      setName(localStorage.getItem('name') || 'User');
-      setEmail(localStorage.getItem('email') || null);
-    });
-}, [location]);
+    (async () => {
+      try {
+        const data = await fetchMe(); 
+        setName(data.name || 'User');
+        setEmail(data.email || localStorage.getItem('email') || null);
+
+        if (data.email) localStorage.setItem('email', data.email);
+        if (data.name) localStorage.setItem('name', data.name);
+      } catch (err) {
+        console.error('User fetch error:', err);
+        setName(localStorage.getItem('name') || 'User');
+        setEmail(localStorage.getItem('email') || null);
+      }
+    })();
+  }, [location]);
 
   useEffect(() => {
     function handleClickOutside(e) {

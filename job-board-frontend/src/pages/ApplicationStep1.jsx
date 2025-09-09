@@ -16,11 +16,7 @@ function ApplicationStep1({ formData, onChange, job }) {
     
     const fetchPhoneFromProfile = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
+        const data = await fetchMe();
         if (data.phoneNumber) {
           const matchCode = COUNTRY_CODES.find(code => data.phoneNumber.startsWith(code));
           if (matchCode) {

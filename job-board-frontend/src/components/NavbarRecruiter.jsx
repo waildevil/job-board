@@ -4,7 +4,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { FiBriefcase, FiMenu, FiX } from 'react-icons/fi';
 import { isTokenExpired } from '../utils/auth';
 import { toast } from 'react-toastify';
-import { API_URL } from '../services/config';
+import { fetchMe } from '../services/api';
 
 export default function NavbarRecruiter() {
   const [email, setEmail] = useState(null);
@@ -22,23 +22,24 @@ export default function NavbarRecruiter() {
         sessionStorage.setItem('toastShown', 'true');
       }
       localStorage.clear();
-      setEmail(null); setName('');
+      setEmail(null);
+      setName('');
       return;
     }
-    fetch(`/users/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => { if (!res.ok) throw new Error(); return res.json(); })
-      .then(d => {
+
+    (async () => {
+      try {
+        const d = await fetchMe();       
         setName(d.name || 'Recruiter');
         setEmail(d.email || localStorage.getItem('email') || null);
         if (d.email) localStorage.setItem('email', d.email);
         if (d.name) localStorage.setItem('name', d.name);
-      })
-      .catch(() => {
+      } catch (e) {
+        console.error('User fetch error:', e);
         setName(localStorage.getItem('name') || 'Recruiter');
         setEmail(localStorage.getItem('email') || null);
-      });
+      }
+    })();
   }, [location]);
 
   useEffect(() => {

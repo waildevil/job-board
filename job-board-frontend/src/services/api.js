@@ -32,18 +32,20 @@ export const countJobsByMinSalary = async (filters) => {
 
 
 
-export const searchJobs = async (filters) => {
-  const params = new URLSearchParams();
+export const searchJobs = async (filters = {}) => {
+  const params = {};
+  if (filters.keyword) params.keyword = filters.keyword;
+  if (filters.location) params.location = filters.location;
+  if (filters.type) params.type = filters.type;
+  if (filters.category) params.category = filters.category;
 
-  if (filters.keyword) params.append('keyword', filters.keyword);
-  if (filters.location) params.append('location', filters.location);
-  if (filters.type) params.append('type', filters.type);
-  if (filters.category) params.append('category', filters.category);
-  if (filters.minSalary) params.append('minSalary', filters.minSalary);
+  // support either minSalary or salary
+  const minSalary = filters.minSalary ?? filters.salary;
+  if (minSalary !== undefined && minSalary !== null && `${minSalary}` !== '') {
+    params.minSalary = minSalary;
+  }
 
-  const res = await fetch(`/api/jobs/search?${params.toString()}`);
-  if (!res.ok) throw new Error('Failed to search jobs');
-  return res.json();
+  return (await axios.get('/jobs/search', { params })).data; // axiosInstance baseURL '/api'
 };
 
 
@@ -118,4 +120,48 @@ export const fetchCompanies = async () => (await axios.get(`/companies`)).data;
 
 
 
+export const fetchMe = async () =>
+  (await axios.get('/users/me')).data;
 
+// Change my password
+export const setMyPassword = async (newPassword) =>
+  (await axios.patch('/users/me/set-password', { newPassword })).data;
+
+
+export const getApplicationFile = async (appId, type) => {
+  return await axios.get(`/applications/${appId}/${type}`, {
+    responseType: 'blob',
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } 
+  });
+};
+
+
+export const getJobById = async (id) =>
+  (await axios.get(`/jobs/${id}`)).data;
+
+
+export const submitApplication = async (formData) => {
+  return (await axios.post('/applications', formData)).data;};
+
+
+
+  export const searchJobsForList = async ({ keyword, location, category, type, salary } = {}) => {
+    const params = {};
+    if (keyword) params.keyword = keyword;
+    if (location) params.location = location;
+    if (category) params.category = category;
+    if (type) params.type = type;
+    if (salary) params.minSalary = salary;
+
+    const { data } = await axios.get('/jobs/search', { params });
+    return data;
+};
+
+
+
+export const patchProfileResource = async (url, body) =>
+  (await axios.patch(url, body)).data;
+
+
+export const registerUser = async (payload) =>
+  (await axios.post('/auth/register', payload)).data;

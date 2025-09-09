@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { BriefcaseIcon, MapPinIcon } from '@heroicons/react/24/solid';
 import JobCard from './JobCard';
-import { fetchCategories, countJobsByMinSalary } from '../services/api';
+import { fetchCategories, countJobsByMinSalary , searchJobsForList } from '../services/api';
 import SalaryFilter from '../components/SalaryFilter';
-import { API_URL } from '../services/config';
+import { API_URL } from '../services/api';
 
 function JobList() {
   const [jobs, setJobs] = useState([]);
@@ -24,15 +24,13 @@ function JobList() {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const query = new URLSearchParams();
-        if (keyword) query.append('keyword', keyword);
-        if (location) query.append('location', location);
-        if (category) query.append('category', category);
-        if (type) query.append('type', type);
-        if (salary) query.append('minSalary', salary);
-
-        const res = await fetch(`/jobs/search?${query.toString()}`);
-        const data = await res.json();
+        const data = await searchJobsForList({
+        keyword,
+        location,
+        category,
+        type,
+        salary,
+      });
         const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setJobs(sorted);
       } catch (err) {

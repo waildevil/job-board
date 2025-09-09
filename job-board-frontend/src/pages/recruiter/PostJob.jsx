@@ -6,6 +6,7 @@ import { FiBriefcase, FiMapPin, FiTag } from 'react-icons/fi';
 import { FaEuroSign } from 'react-icons/fa';
 import { Editor } from '@tinymce/tinymce-react';
 import { API_URL } from '../../services/config';
+import { getJobById } from '../../services/api';
 
 const TYPE_LABELS = {
   FULL_TIME: 'Full-time',
@@ -62,11 +63,7 @@ export default function PostJob() {
     (async () => {
       try {
         setJobLoading(true);
-        const res = await fetch(`/jobs/${routeId}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` },
-        });
-        if (!res.ok) throw new Error('Failed to load job');
-        const job = await res.json();
+        const job = await getJobById(routeId);
         setEditingJob(job);
         setForm((f) => ({
           ...f,

@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import { getDecodedToken } from '../services/api';
 import { BACKEND_URL, API_URL } from '../services/config';
+import { loginUser } from '../services/api';
+
 
 
 
@@ -16,29 +18,23 @@ function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError('');
+    e.preventDefault();
+    setError('');
 
-  try {
-    const response = await fetch(`/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) {
+    try {
+    const res = await loginUser(email, password);          // <- axios call in api.js
+    const token = typeof res === 'string' ? res : res?.token;
+    if (!token) {
       setError('Invalid credentials');
       return;
     }
 
-    const data = await response.json();
-    localStorage.setItem('token', data.token);
+    localStorage.setItem('token', token);
     localStorage.setItem('email', email);
-
 
     let decoded = null;
     try {
-      decoded = getDecodedToken?.() || jwtDecode(data.token);
+      decoded = getDecodedToken?.() || jwtDecode(token);   // use the token we just saved
     } catch (_) {}
 
     if (decoded) {
@@ -46,7 +42,6 @@ function Login() {
       if (decoded.userId) localStorage.setItem('userId', decoded.userId);
       if (decoded.name) localStorage.setItem('name', decoded.name);
     }
-
 
     const role = (decoded && decoded.role) || localStorage.getItem('role');
     if (role === 'RECRUITER') {

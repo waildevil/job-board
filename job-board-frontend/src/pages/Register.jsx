@@ -4,6 +4,8 @@ import { FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { API_URL } from '../services/config';
+import { registerUser } from '../services/api';
+
 
 function Register() {
   const navigate = useNavigate();
@@ -22,16 +24,11 @@ function Register() {
     e.preventDefault();
 
     try {
-      const res = await fetch(`/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const data = await registerUser(formData);
+      const token = typeof data === 'string' ? data : data?.token;
+      if (!token) throw new Error('Registration failed');
 
-      if (!res.ok) throw new Error('Registration failed');
-      const data = await res.json();
-
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', token);
       localStorage.setItem('email', formData.email);
       toast.success('Registered successfully!');
       navigate('/');
@@ -39,6 +36,7 @@ function Register() {
       toast.error('Something went wrong');
       console.error(err);
     }
+
   };
 
   return (

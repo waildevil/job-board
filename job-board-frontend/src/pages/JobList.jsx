@@ -31,7 +31,7 @@ function JobList() {
         if (type) query.append('type', type);
         if (salary) query.append('minSalary', salary);
 
-        const res = await fetch(`${API_URL}/jobs/search?${query.toString()}`);
+        const res = await fetch(`/jobs/search?${query.toString()}`);
         const data = await res.json();
         const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setJobs(sorted);

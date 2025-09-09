@@ -17,7 +17,7 @@ export default function SetPasswordCard({ onDone, className = '' }) {
     if (!canSave || !token) return;
     setSaving(true); setMsg(null); setErr(null);
     try {
-      const res = await fetch(`${API_URL}/users/me/set-password`, {
+      const res = await fetch(`/users/me/set-password`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ newPassword: p1 }),

@@ -40,7 +40,7 @@ function JobApplicationForm() {
 
     try {
       setSubmitting(true);
-      await axios.post(`${API_URL}/applications`, data, {
+      await axios.post(`/applications`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -75,7 +75,7 @@ function JobApplicationForm() {
 
   
   useEffect(() => {
-    axios.get(`${API_URL}/jobs/${jobId}`)
+    axios.get(`/jobs/${jobId}`)
       .then(res => setJob(res.data))
       .catch(err => console.error('Failed to fetch job info', err));
   }, [jobId]);

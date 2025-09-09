@@ -25,7 +25,7 @@ export default function NavbarRecruiter() {
       setEmail(null); setName('');
       return;
     }
-    fetch(`${API_URL}/users/me`, {
+    fetch(`/users/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => { if (!res.ok) throw new Error(); return res.json(); })

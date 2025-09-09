@@ -22,7 +22,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${API_URL}/auth/register`, {
+      const res = await fetch(`/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

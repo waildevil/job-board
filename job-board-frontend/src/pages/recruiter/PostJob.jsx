@@ -62,7 +62,7 @@ export default function PostJob() {
     (async () => {
       try {
         setJobLoading(true);
-        const res = await fetch(`${API_URL}/jobs/${routeId}`, {
+        const res = await fetch(`/jobs/${routeId}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` },
         });
         if (!res.ok) throw new Error('Failed to load job');

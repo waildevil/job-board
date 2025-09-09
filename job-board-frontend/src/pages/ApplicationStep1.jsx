@@ -17,7 +17,7 @@ function ApplicationStep1({ formData, onChange, job }) {
     const fetchPhoneFromProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/users/me`, {
+        const res = await fetch(`/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

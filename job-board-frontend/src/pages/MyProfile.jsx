@@ -13,7 +13,7 @@ export default function MyProfile() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`${API_URL}/users/me`, {
+        const res = await fetch(`/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Failed to fetch user profile');
@@ -55,7 +55,7 @@ export default function MyProfile() {
     }
 
     try {
-      const res = await fetch(`${API_URL}${url}`, {
+      const res = await fetch(`${url}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ function PasswordBlock({ token, notify }) {
     setMsg(null);
     setErr(null);
     try {
-      const res = await fetch(`${API_URL}/users/me/password`, {
+      const res = await fetch(`/users/me/password`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -25,7 +25,7 @@ function JobDetail() {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await fetch(`${API_URL}/jobs/${id}`);
+        const res = await fetch(`/jobs/${id}`);
         const data = await res.json();
         setJob(data);
       } catch (err) {

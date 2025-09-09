@@ -30,7 +30,7 @@ function Navbar() {
   }
 
  
-  fetch(`${API_URL}/users/me`, {
+  fetch(`/users/me`, {
     headers: { Authorization: `Bearer ${token}` },
   })
     .then(res => {

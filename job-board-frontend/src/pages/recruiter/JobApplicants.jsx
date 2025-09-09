@@ -20,7 +20,7 @@ export default function JobApplicants() {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        `${API_URL}/applications/${appId}/${type}`,
+        `/applications/${appId}/${type}`,
         {
           responseType: "blob",
           headers: { Authorization: `Bearer ${token}` }

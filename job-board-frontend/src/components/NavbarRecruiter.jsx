@@ -4,6 +4,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { FiBriefcase, FiMenu, FiX } from 'react-icons/fi';
 import { isTokenExpired } from '../utils/auth';
 import { toast } from 'react-toastify';
+import { API_URL } from '../services/config';
 
 export default function NavbarRecruiter() {
   const [email, setEmail] = useState(null);
@@ -24,7 +25,7 @@ export default function NavbarRecruiter() {
       setEmail(null); setName('');
       return;
     }
-    fetch('http://localhost:8080/api/users/me', {
+    fetch(`${API_URL}/users/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => { if (!res.ok) throw new Error(); return res.json(); })

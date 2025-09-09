@@ -4,6 +4,8 @@ import { FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import { getDecodedToken } from '../services/api';
+import { BACKEND_URL, API_URL } from '../services/config';
+
 
 
 function Login() {
@@ -18,7 +20,7 @@ function Login() {
   setError('');
 
   try {
-    const response = await fetch('http://localhost:8080/api/auth/login', {
+    const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -123,7 +125,7 @@ function Login() {
 
         <div className="space-y-3">
           <button
-            onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
+            onClick={() => window.location.href = `${BACKEND_URL}/oauth2/authorization/google`}
             className="w-full flex items-center justify-center border border-gray-300 py-2 rounded-md hover:bg-gray-100 transition"
           >
             <FcGoogle className="text-xl mr-2" />

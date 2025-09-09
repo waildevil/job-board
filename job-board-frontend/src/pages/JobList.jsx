@@ -4,6 +4,7 @@ import { BriefcaseIcon, MapPinIcon } from '@heroicons/react/24/solid';
 import JobCard from './JobCard';
 import { fetchCategories, countJobsByMinSalary } from '../services/api';
 import SalaryFilter from '../components/SalaryFilter';
+import { API_URL } from '../services/config';
 
 function JobList() {
   const [jobs, setJobs] = useState([]);
@@ -30,7 +31,7 @@ function JobList() {
         if (type) query.append('type', type);
         if (salary) query.append('minSalary', salary);
 
-        const res = await fetch(`http://localhost:8080/api/jobs/search?${query.toString()}`);
+        const res = await fetch(`${API_URL}/jobs/search?${query.toString()}`);
         const data = await res.json();
         const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setJobs(sorted);

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../../services/axiosInstance';
 import { getApplicantsByJob, setApplicationStatus, getJobStats } from '../../services/api';
 import { toast } from 'react-toastify';
+import { API_URL } from '../../services/config';
 
 export default function JobApplicants() {
   const { jobId } = useParams();
@@ -19,7 +20,7 @@ export default function JobApplicants() {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        `http://localhost:8080/api/applications/${appId}/${type}`,
+        `${API_URL}/applications/${appId}/${type}`,
         {
           responseType: "blob",
           headers: { Authorization: `Bearer ${token}` }

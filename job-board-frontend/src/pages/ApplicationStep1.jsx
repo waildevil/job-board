@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../services/config';
 
 function ApplicationStep1({ formData, onChange, job }) {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function ApplicationStep1({ formData, onChange, job }) {
     const fetchPhoneFromProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:8080/api/users/me', {
+        const res = await fetch(`${API_URL}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

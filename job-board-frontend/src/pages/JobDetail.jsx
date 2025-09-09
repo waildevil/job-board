@@ -12,6 +12,7 @@ import { hasAppliedToJob } from '../services/api';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
+import { API_URL } from '../services/config';
 
 function JobDetail() {
   const { id } = useParams();
@@ -24,7 +25,7 @@ function JobDetail() {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/jobs/${id}`);
+        const res = await fetch(`${API_URL}/jobs/${id}`);
         const data = await res.json();
         setJob(data);
       } catch (err) {

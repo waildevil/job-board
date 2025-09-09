@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AddressInput from './AddressInput';
+import { API_URL } from '../services/config';
 
 export default function MyProfile() {
   const [me, setMe] = useState(null);
@@ -12,7 +13,7 @@ export default function MyProfile() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('http://localhost:8080/api/users/me', {
+        const res = await fetch(`${API_URL}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Failed to fetch user profile');
@@ -41,20 +42,20 @@ export default function MyProfile() {
     let url = '';
     let body = {};
     if (field === 'name') {
-      url = '/api/users/me/name';
+      url = '/users/me/name';
       body = { name: temp.name.trim() };
     }
     if (field === 'phone') {
-      url = '/api/users/me/phone';
+      url = '/users/me/phone';
       body = { phoneNumber: temp.phoneNumber.trim() };
     }
     if (field === 'address') {
-      url = '/api/users/me/address';
+      url = '/users/me/address';
       body = { address: temp.address.trim() };
     }
 
     try {
-      const res = await fetch(`http://localhost:8080${url}`, {
+      const res = await fetch(`${API_URL}${url}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -213,7 +214,7 @@ function PasswordBlock({ token, notify }) {
     setMsg(null);
     setErr(null);
     try {
-      const res = await fetch('http://localhost:8080/api/users/me/password', {
+      const res = await fetch(`${API_URL}/users/me/password`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

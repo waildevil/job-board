@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { FiBriefcase, FiMapPin, FiTag } from 'react-icons/fi';
 import { FaEuroSign } from 'react-icons/fa';
 import { Editor } from '@tinymce/tinymce-react';
+import { API_URL } from '../../services/config';
 
 const TYPE_LABELS = {
   FULL_TIME: 'Full-time',
@@ -61,7 +62,7 @@ export default function PostJob() {
     (async () => {
       try {
         setJobLoading(true);
-        const res = await fetch(`http://localhost:8080/api/jobs/${routeId}`, {
+        const res = await fetch(`${API_URL}/jobs/${routeId}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` },
         });
         if (!res.ok) throw new Error('Failed to load job');
@@ -167,7 +168,7 @@ export default function PostJob() {
               <div>
                 <Label>Job Description</Label>
                 <Editor
-                  apiKey="2uwei5gq71kjr6oqzynzss18c5fzdoadtgoftiwyjv5uvypz"
+                  apiKey={process.env.REACT_APP_TINYMCE_KEY}
                   value={form.description}
                   onEditorChange={(content) => set('description', content)}
                   init={{

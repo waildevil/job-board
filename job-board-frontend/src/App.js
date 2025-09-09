@@ -10,7 +10,7 @@ import MyApplications from './pages/MyApplications';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyProfile from './pages/MyProfile';
-import OAuthCallback from './pages/OAuthCallback';
+import OAuthCallback from './pages/OAuthCallback.jsx';
 import RecruiterDashboard from './pages/recruiter/RecruiterDashboard';
 import ManageJobs from './pages/recruiter/ManageJobs';
 import PostJob from './pages/recruiter/PostJob';

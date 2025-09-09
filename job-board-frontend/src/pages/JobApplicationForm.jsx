@@ -7,6 +7,7 @@ import ApplicationStep2 from './ApplicationStep2';
 import ApplicationStep3 from './ApplicationStep3';
 import ApplicationSummary from './ApplicationSummary';
 import ApplicationStep4 from './ApplicationStep4';
+import { API_URL } from '../services/config';
 
 function JobApplicationForm() {
   const { id: jobId } = useParams();
@@ -39,7 +40,7 @@ function JobApplicationForm() {
 
     try {
       setSubmitting(true);
-      await axios.post('http://localhost:8080/api/applications', data, {
+      await axios.post(`${API_URL}/applications`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -74,7 +75,7 @@ function JobApplicationForm() {
 
   
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/jobs/${jobId}`)
+    axios.get(`${API_URL}/jobs/${jobId}`)
       .then(res => setJob(res.data))
       .catch(err => console.error('Failed to fetch job info', err));
   }, [jobId]);

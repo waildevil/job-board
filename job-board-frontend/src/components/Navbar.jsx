@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { isTokenExpired, getUserRole } from '../utils/auth';
 import { toast } from 'react-toastify';
+import { API_URL } from '../services/config';
 
 
 
@@ -29,7 +30,7 @@ function Navbar() {
   }
 
  
-  fetch('http://localhost:8080/api/users/me', {
+  fetch(`${API_URL}/users/me`, {
     headers: { Authorization: `Bearer ${token}` },
   })
     .then(res => {

@@ -72,7 +72,7 @@ export default function ManageJobs() {
                   <p className="text-sm text-gray-600">
                     {job.companyName} • {job.location} • {formatType(job.type)}
                   </p>
-                  {/* FIX: render description as formatted HTML but clamp to 2 lines */}
+                 
                   <div
                     className="text-sm text-gray-700 mt-2 line-clamp-2 prose prose-sm max-w-none"
                     dangerouslySetInnerHTML={{ __html: job.description || 'No description provided.' }}

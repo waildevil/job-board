@@ -1,33 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AddressInput from './AddressInput';
-import { API_URL } from '../services/config';
-import { fetchMe } from '../services/api';
-import { updateMyPassword } from '../services/api';
-
-const changePassword = async () => {
-  if (!canSave) return;
-  setSaving(true);
-  setMsg(null);
-  setErr(null);
-  try {
-    await updateMyPassword(oldPassword, nw);
-    setMsg('Password changed successfully');
-    notify?.('Password changed');
-    setOld('');
-    setNew('');
-    setConfirm('');
-    setTimeout(() => setMsg(null), 2500);
-  } catch (e) {
-    const msg = e?.response?.data?.message || e?.response?.data?.error || e.message || 'Failed to change password';
-    setErr(msg);
-    setTimeout(() => setErr(null), 3500);
-  } finally {
-    setSaving(false);
-  }
-};
-
-
-
+import { fetchMe, patchProfileResource, updateMyPassword } from '../services/api';
 
 export default function MyProfile() {
   const [me, setMe] = useState(null);
@@ -38,23 +11,22 @@ export default function MyProfile() {
   const token = useMemo(() => localStorage.getItem('token'), []);
 
   useEffect(() => {
-  (async () => {
-    try {
-      const data = await fetchMe();
-      setMe(data);
-      setTemp({
-        name: data.name || '',
-        phoneNumber: data.phoneNumber || '',
-        address: data.address || '',
-      });
-    } catch (e) {
-      console.error('Failed to fetch user profile', e);
-    } finally {
-      setLoading(false);
-    }
-  })();
-}, [token]);
-
+    (async () => {
+      try {
+        const data = await fetchMe();
+        setMe(data);
+        setTemp({
+          name: data.name || '',
+          phoneNumber: data.phoneNumber || '',
+          address: data.address || '',
+        });
+      } catch (e) {
+        console.error('Failed to fetch user profile', e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [token]);
 
   const notify = (t) => {
     setMsg(t);
@@ -91,8 +63,7 @@ export default function MyProfile() {
   if (loading) return <p className="p-6">Loading...</p>;
   if (!me) return <p className="p-6 text-red-500">Failed to load profile.</p>;
 
-
-  const isLocalUser = me.provider?.toUpperCase() === 'LOCAL';
+  const isLocalUser = (me.provider || '').toUpperCase() === 'LOCAL';
 
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-200 py-16 px-4 flex justify-center">
@@ -158,9 +129,8 @@ export default function MyProfile() {
           />
         </EditableRow>
 
-
         {isLocalUser ? (
-          <PasswordBlock token={token} notify={notify} />
+          <PasswordBlock notify={notify} />
         ) : (
           <div className="text-sm text-gray-500 border-t pt-4">
             🔒 Password change is disabled for Google sign-in accounts.
@@ -170,7 +140,6 @@ export default function MyProfile() {
     </div>
   );
 }
-
 
 function DisplayRow({ label, value }) {
   return (
@@ -212,8 +181,7 @@ function EditableRow({ label, value, isEditing, onEdit, onCancel, onSave, childr
   );
 }
 
-
-function PasswordBlock({ token, notify }) {
+function PasswordBlock({ notify }) {
   const [oldPassword, setOld] = useState('');
   const [nw, setNew] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -224,26 +192,30 @@ function PasswordBlock({ token, notify }) {
   const canSave = oldPassword && nw && confirm && nw === confirm && nw.length >= 8;
 
   const changePassword = async () => {
-  if (!canSave) return;
-  setSaving(true);
-  setMsg(null);
-  setErr(null);
-  try {
-    await updateMyPassword(oldPassword, nw);
-    setMsg('Password changed successfully');
-    notify?.('Password changed');
-    setOld('');
-    setNew('');
-    setConfirm('');
-    setTimeout(() => setMsg(null), 2500);
-  } catch (e) {
-    const msg = e?.response?.data?.message || e?.response?.data?.error || e.message || 'Failed to change password';
-    setErr(msg);
-    setTimeout(() => setErr(null), 3500);
-  } finally {
-    setSaving(false);
-  }
-};
+    if (!canSave) return;
+    setSaving(true);
+    setMsg(null);
+    setErr(null);
+    try {
+      await updateMyPassword(oldPassword, nw); // smart helper picks change vs set
+      setMsg('Password changed successfully');
+      notify?.('Password changed');
+      setOld('');
+      setNew('');
+      setConfirm('');
+      setTimeout(() => setMsg(null), 2500);
+    } catch (e) {
+      const message =
+        e?.response?.data?.message ||
+        e?.response?.data?.error ||
+        e.message ||
+        'Failed to change password';
+      setErr(message);
+      setTimeout(() => setErr(null), 3500);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="pt-4 border-t">
@@ -267,7 +239,6 @@ function PasswordBlock({ token, notify }) {
     </div>
   );
 }
-
 
 function PasswordInput({ label, value, onChange }) {
   const [visible, setVisible] = useState(false);
@@ -301,6 +272,7 @@ function EyeIcon() {
     </svg>
   );
 }
+
 function EyeOffIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
@@ -312,14 +284,4 @@ function EyeOffIcon() {
       0 01-3-3" />
     </svg>
   );
-}
-
-async function extractErr(res) {
-  const ct = res.headers.get('content-type') || '';
-  if (ct.includes('application/json')) {
-    const data = await res.json().catch(() => ({}));
-    return new Error(data.error || data.message || res.statusText || `HTTP ${res.status}`);
-  }
-  const text = await res.text().catch(() => '');
-  return new Error(text || res.statusText || `HTTP ${res.status}`);
 }

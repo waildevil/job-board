@@ -117,4 +117,4 @@ export const registerUser = async (payload) =>
 
 
 export const updateMyPassword = async (oldPassword, newPassword) =>
-  (await axios.patch('/users/me/set-password', { oldPassword, newPassword })).data;
+  (await axios.patch('/users/me/password', { oldPassword, newPassword })).data;

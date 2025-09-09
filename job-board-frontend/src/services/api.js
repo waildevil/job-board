@@ -83,7 +83,7 @@ export const fetchMe = async () =>
   (await axios.get('/users/me')).data;
 
 export const setMyPassword = async (newPassword) =>
-  (await axios.patch('/users/me/set-password', { newPassword })).data;
+  (await axios.patch('/users/me/password', { newPassword })).data;
 
 // Files
 export const getApplicationFile = async (appId, type) =>

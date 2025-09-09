@@ -197,7 +197,7 @@ function PasswordBlock({ notify }) {
     setMsg(null);
     setErr(null);
     try {
-      await updateMyPassword(oldPassword, nw); // smart helper picks change vs set
+      await updateMyPassword(oldPassword, nw);
       setMsg('Password changed successfully');
       notify?.('Password changed');
       setOld('');
